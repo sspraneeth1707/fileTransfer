@@ -1,0 +1,82 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    aws:
+      endpoint: http://localhost:4566
+      region:
+        static: us-east-1
+      credentials:
+        access-key: test
+        secret-key: test
+      sqs:
+        enabled: true
+        queue-name: fts-notifications
+        autoCreate: false
+      s3:
+        bucket-name: my-bucket
+        inbound_directory: inbound
+      secretsmanager:
+#        fts-cert-secretName: fts-cert
+#        fts-keystore-password-secretName: fts-keystore-password
+        fts-ssl-bundle-secretName: fts-ssl-bundle
+        fts-ssl-cert-key: cert
+        fts-ssl-cert-pass-key: password
+
+# NGFT External API Configuration
+file:
+  api:
+    base-url: https://api.sandbox.filex.dev.mastercard.int:10442/filetransfer
+  chunk:
+    size: 26214400 #25mb*1024*1024
+  minimum:
+    size: 26214400 #25mb*1024*1024
+
+fts:
+  ngft:
+    receiver: ids-fts-client@mastercard
+    sender: ekata-test-customer@mastercard
+    filelist:
+      page-size: 10
+      status: Available
+
+aws:
+  #AWS Cloud Watch Configuration
+  cloudwatch:
+    logGroup: file-transfer-logs
+    logStream: application-logs
+  # AWS SES Configuration
+  ses:
+    sender-email: no-reply@example.com
+    receiver-email: admin@example.com
+    region: us-east-1
+
+logging:
+  level:
+    root: info
+    com.mastercard.ids.fts: debug
+
+server:
+  port: 8086
+
+# Configure SSL Client
+ssl:
+  client:
+    key-store-certificate-arn: arn:aws:acm:us-east-1:000000000000:certificate/66570a4e-be9c-42e5-b675-0259a57653ae

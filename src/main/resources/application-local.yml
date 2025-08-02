@@ -1,0 +1,62 @@
+# Configure SSL Client
+ssl:
+  client:
+    key-store: classpath:ids-fts-filex-client-dev.pfx
+    key-store-password: Ekataftsngft123#
+    trust-store: classpath:cacerts
+    trust-store-password: changeit
+    key-alias: 20250320143000-ids-fts-filex-client-dev
+
+# Configure DataSource to use H2 in-memory
+spring:
+  datasource:
+    url: jdbc:h2:mem:localdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+        trace: false
+  batch:
+    jdbc:
+      initialize-schema: always
+  sql:
+    init:
+      mode: always
+
+# NGFT External API Configuration
+file:
+  api:
+    base-url: https://api.sandbox.filex.dev.mastercard.int:10442/filetransfer
+  chunk:
+    size: 26214400 #25mb*1024*1024
+  minimum:
+    size: 26214400 #25mb*1024*1024
+
+fts:
+  ngft:
+    receiver: ids-fts-client@mastercard
+    sender: ekata-test-customer@mastercard
+    filelist:
+      page-size: 10
+      status: Available
+
+logging:
+  level:
+    root: info
+    com.mastercard.ids.fts: info
+
+server:
+  port: 8086

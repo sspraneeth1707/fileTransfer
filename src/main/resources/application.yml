@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: fts-service
+  profiles:
+    active: ${spring.active.profiles}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.graphql.GraphQlAutoConfiguration
+
+# External API Configuration
+file:
+  api:
+    list-endpoint: /files
+    initiate-endpoint: /files
+    info-endpoint: /file?info=info
+    transfer-endpoint: /file
+    cancel-endpoint: /file?cancel
+    complete-endpoint: /file?complete
+
+# Circuit Breaker Configurations
+resilience4j:
+  circuitbreaker:
+    instances:
+      externalApi:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5000
+        slidingWindowSize: 10
+
+fts:
+  ngft:
+    file:
+      extension:
+        allowed: csv, zip, xlsx
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: WHEN_AUTHORIZED

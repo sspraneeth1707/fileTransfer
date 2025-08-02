@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: ${spring.application.name}
+  datasource:
+    url: ${datasource.url}
+    username: ${datasource.username}
+    driver-class-name: ${datasource.driver.class}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    aws:
+      region:
+        static: us-west-2
+      sqs:
+        enabled: true
+        queue-name: ${aws.queue.name}
+        autoCreate: false
+      s3:
+        bucket-name: ${aws.bucketname}
+        inbound_directory: ${aws.inbound.directory}
+      secretsmanager:
+        fts-ssl-bundle-secretName: ${aws.fts.ssl.secretName}
+        fts-ssl-cert-key: ${aws.fts.ssl.cert.key}
+        fts-ssl-cert-pass-key: ${aws.fts.ssl.pass.key}
+#      ses:
+#        configuration-set-name:
+
+# NGFT
+file:
+  api:
+    base-url: ${normalisation.base-url}
+  chunk:
+    size: ${file.chunk.size}
+  minimum:
+    size: ${file.minimum.size}
+
+fts:
+  ngft:
+    receiver: ${receiver.logical.address}
+    sender: ${sender.logical.address}
+    filelist:
+      page-size: ${filelist.page.size}
+      status: ${filelist.status}
+
+logging:
+  level:
+    root: ${logging.level.root}
+    com.mastercard.ids.fts: ${logging.level.ids.fts}
+
+server:
+  port: 8086
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 0.1
+  otlp:
+    metrics:
+      export:
+        url: ${OTEL_EXPORTER_OTLP_ENDPOINT}/api/v2/otlp
+        enabled: true
+        step: 20s
+        read-timeout: 10s
+        connect-timeout: 5s
+        batch-size: 100
